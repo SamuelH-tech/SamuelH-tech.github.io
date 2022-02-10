@@ -300,7 +300,7 @@
         
         sendButton.addEventListener("click", function()
         {
-           
+                event.preventDefault();
                 //output to console
                 console.log($("#fullName").val());
                 console.log($("#contactNumber").val());
@@ -318,11 +318,15 @@
            
         );
         let currenttime = new Date();
+        let humanResourcesLink = document.createElement("nav");
+        humanResourcesLink.innerHTML = `<a class="nav-link" href="human-resources.html"><i class="fab fa-hire-a-helper"></i>HR</a>`;
+        $("#about-button").after(humanResourcesLink);
         //create bottom nav
         let bottomNav = document.createElement("nav");
         bottomNav.innerHTML = `<nav class="navbar fixed-bottom navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" id="bottomnav" href="#">Fixed bottom</a>
         </nav`;
+        
        documentBody.append(bottomNav);
        document.getElementById(`bottomnav`).innerHTML = currenttime + `Copyright Samuel Hasham 2022<span>&#169;</span>`;
     
