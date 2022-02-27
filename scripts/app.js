@@ -1,377 +1,533 @@
-/**     
- * Author: Samuel Hasham
- * Student Number: 100708080
- * Desc: My java script for displaying pages and creating event listeners as well as inserting elements.
- * Date Completed: 2022-02-06.
+/**
+ * Name: Samuel Hasham
+ * Student ID: 100708080   
+ * Date Completed:
+ * 
+ * 
  */
+class User {
+    constructor(firstName = "",lastName = "",username = "",email = "",password = "")
+    {
+        //set attributes
+        this.FirstName = firstName;
+        this.LastName = lastName;
+        this.Username = username;
+        this.Email = email;
+        this.Password = password;
+        //unsure why this wont work when sending it to the console.log in displayregister
+        toString()
+        {
+            return `First Name : ${this.FirstName}\nLast Name : ${this.LastName}\nUsername : ${this.Username} \nEmail : ${this.Email} \nPassword : ${this.Password}`;
+        }
+    }
+};
+// IIFE -- Immediately Invoked Function Express
+// AKA anonymous self-executing function
 
-// IIFE -- Immediatly Invoked Function Express
-// AKA anon self-executing function
+"use strict";
 (function()
 {
     /**
-     * Displays the home page as well as adds the event listener to link to the about page from the button on the html page.
-     * and inserts two bits of text through <P> tags. There are also changes to the top header including a new link and a
-     * edit to the products.html page. In addition there is also a bottom nav bar added.
+     * This function uses AJAX open a connection to the url and returns data to the callback function
+     *
+     * @param {string} method
+     * @param {string} url
+     * @param {Function} callback
      */
-    function DisplayHomePage()
+    function AjaxRequest(method, url, callback)
     {
-        
-        console.log("Home Page");
-        let AboutUsButton = document.getElementById("AboutUsButton");
-        AboutUsButton.addEventListener("click", function()
+        // step 1 - create a new XHR object
+        let XHR = new XMLHttpRequest();
+
+        // step 2 - create an event
+        XHR.addEventListener("readystatechange", ()=>
         {
-            location.href="about.html";
+            if(XHR.readyState === 4 && XHR.status === 200)
+            {
+               callback(XHR.responseText);
+            }
         });
-        console.log(AboutUsButton);
 
-        
-        // Step 1 - get a reference to an entry point(s) (insertion / deletion)
-        let MainContent = document.getElementsByTagName("main")[0];
-        let documentBody = document.body;
-        //step 2 - Create a HTML element in memory
-        let MainParagraph = document.createElement("p");
-        let Article = document.createElement("article");
-        let ArticleParagraph = `<p id="ArticleParagraph" class="mt-3">I like things like music, video games, and nature. I always found myself interested in computers and am taking this course as lots of different languages and techniques appeal to me.</p>`;
-        //step 3 - Configure the new element
-        MainParagraph.setAttribute("id", "MainParagraph");
-        MainParagraph.setAttribute("class", "mt-3");
-        //Main paragraph content.
-        let WelcomeString = "Welcome to Samuel Hasham's webpage. A small bit about me is I enjoy the outdoors and video games.\r\nI am currently a full time student at durham college working towards my CPGM diploma.";
-        //add background image.
-        document.body.style.backgroundImage = "url('../content/home-background.png')";
-       
-        MainParagraph.textContent = WelcomeString;
-        Article.setAttribute("class", "container");
-        
+        // step 3 - open a request
+        XHR.open(method, url);
 
-        //create a new nav link for the new header element.
-        let humanResourcesLink = document.createElement("nav-link");
-        humanResourcesLink.innerHTML = `<a class="nav-link" href="human-resources.html"><i class="fab fa-hire-a-helper"></i>HR</a>`;
-        $("#about-button").after(humanResourcesLink);
-        
-        //insert after / append.
-        MainContent.appendChild(MainParagraph);
-        Article.innerHTML = ArticleParagraph;
-        documentBody.appendChild(Article);
-        // Add human resources to Nav in the proper spot & change products to projects.
-        let productsLink = document.getElementById("products-link");
-        productsLink.innerHTML = `<a class="nav-link" href="projects.html"><i class="fas fa-project-diagram"></i>Projects</a>`;
-        //get a current timestamp for navbar reason.
-        let currenttime = new Date();
-        //create bottom nav
-        let bottomNav = document.createElement("nav");
-        bottomNav.innerHTML = `<nav class="navbar fixed-bottom navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" id="bottomnav" href="#">Fixed bottom</a>
-        </nav`;
-       documentBody.append(bottomNav);
-       document.getElementById(`bottomnav`).innerHTML = currenttime + `Copyright Samuel Hasham 2022<span>&#169;</span>`;
-    
-
+        // step 4 - send the request
+        XHR.send();
     }
+
     /**
-     * Displays the Projects page as well as adds the images that relate to the <P> tags that have been added.
-     * inserts two bits of text through <P> tags. There are also changes to the top header including a new link and a
-     * edit to the products.html page. In addition there is also a bottom nav bar added.
+     * This function loads the Navbar from the header file and injects into the page
+     *
+     * @param {string} data
      */
-    function DisplayProjectsPage()
+    function LoadHeader(data)
     {
-         // Step 1 - get a reference to an entry point(s) (insertion / deletion)
-         let MainContent = document.getElementsByTagName("main")[0];
-         let documentBody = document.body;
-         //step 2 - Create a HTML element in memory
-         let MainParagraph = document.createElement("p");
-         let Article = document.createElement("article");
-         let ArticleParagraph = `<p id="ArticleParagraph" class="mt-3">The project required me to read a file and store the info so that it was properly stored, then format respective headings, calculate the extra fields, and track the totals.
-          The importance of formatting output for users was really proven to me when i saw the output with minimal formatting done.</p>`;
-         //step 3 - Configure the new element
-         MainParagraph.setAttribute("id", "MainParagraph");
-         MainParagraph.setAttribute("class", "mt-3");
-         //Main paragraph content.
-         let WelcomeString = "Welcome to my Projects! One of the projects I enjoyed learning a language for was my cobol assignment to take a raw input file and produce a formatted report with calculated totals.\r\n Because edited picture's cannot have calculations done on them i needed two sets of variables, one for calculation, and one for output. Without a formatted output the report is hard for humans to read and showed me how far formatting pages has come since when COBOL was created.";
-         MainParagraph.textContent = WelcomeString;
-         Article.setAttribute("class", "container");
-        // creating and appending an image.
-         let mafdOutputs = document.createElement("IMG");
-         mafdOutputs.setAttribute("src", "../content/MAFD-Formatted-Vars.png");
-         mafdOutputs.setAttribute("width", "305");
-         mafdOutputs.setAttribute("height", "265");
-         mafdOutputs.setAttribute("alt", "Formatted COBOL variables to display info.");
-         documentBody.appendChild(mafdOutputs);
-
-         let mafdCalc = document.createElement("IMG");
-         mafdCalc.setAttribute("src", "../content/MAFD-calculating-logic.png");
-         mafdCalc.setAttribute("width", "305");
-         mafdCalc.setAttribute("height", "265");
-         mafdCalc.setAttribute("alt", "Formatted COBOL variables to allow for calculations before passing info.");
-         documentBody.appendChild(mafdCalc);
-         
-        
-         
-        
-        
-        
-         //step 2 - Create a HTML element in memory
-         let SecondParagraph = document.createElement("p");
-         let SecondArticle = document.createElement("article-Two");
-         let Article2Paragraph = `<p id="Article-2-Paragraph" class="mt-3">This project involved creating a multi-page website for calculating a piecework workers pay based on a set of variables. It was my first time using MVC and I am interested in learning more about it.</p>`;
-         //step 3 - Configure the new element
-         SecondParagraph.setAttribute("id", "Article-two-Paragraph");
-         SecondParagraph.setAttribute("class", "mt-3");
-         //add content.
-         let ProjectTwo = "My second project which is also recent was the IncInc website I made in Net Dev. It was our first introduction to MVC pages and using C# to create forms and links was fun and the form creation was a massive leap fordward as far as using regular windows forms. It was a fairly non complex website but the development process was unlike any other webpage i've made.";
-         SecondParagraph.textContent = ProjectTwo;
-         SecondArticle.setAttribute("class", "container");
-         
-        
-         let IncIncPage = document.createElement("IMG");
-         IncIncPage.setAttribute("src", "../content/IncIncHome.png");
-         IncIncPage.setAttribute("width", "700");
-         IncIncPage.setAttribute("height", "355");
-         IncIncPage.setAttribute("alt", "IncInc Home webpage.");
-         
- 
-          // Add human resources to Nav in the proper spot & change products to projects.
-        let productsLink = document.getElementById("products-link");
-        productsLink.innerHTML = `<a class="nav-link" href="projects.html"><i class="fas fa-project-diagram"></i>Projects</a>`;
-
-        let humanResourcesLink = document.createElement("nav");
-        humanResourcesLink.innerHTML = `<a class="nav-link" href="human-resources.html"><i class="fab fa-hire-a-helper"></i>HR</a>`;
-        $("#about-button").after(humanResourcesLink);
-
-         //append.
-         MainContent.appendChild(MainParagraph);
-         Article.innerHTML = ArticleParagraph;
-         documentBody.appendChild(Article);
-         //Appending second projects information
-         documentBody.appendChild(SecondParagraph);
-         SecondArticle.innerHTML = Article2Paragraph;
-         documentBody.appendChild(SecondArticle);
-         documentBody.appendChild(IncIncPage);
-
-         
-         let currenttime = new Date();
-        //create bottom nav
-        let bottomNav = document.createElement("nav");
-        bottomNav.innerHTML = `<nav class="navbar fixed-bottom navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" id="bottomnav" href="#">Fixed bottom</a>
-        </nav`;
-        documentBody.append(bottomNav);
-        document.getElementById(`bottomnav`).innerHTML = currenttime + `Copyright Samuel Hasham 2022<span>&#169;</span>`;
-    
-
-
-        console.log("Projects Page");
+        $("header").html(data);
+        $(`li>a:contains(${document.title})`).addClass("active");
+        CheckLogin();
     }
-    /**
-     * Displays the Services page.
-     * inserts two bits of text through <P> tags. There are also changes to the top header including a new link and a
-     * edit to the products.html page. In addition there is also a bottom nav bar added.
-     */
-    function DisplayServicesPage()
+
+    function DisplayHome()
     {
-        console.log("Services Page");
+        console.log("Home Page");
 
-         // Step 1 - get a reference to an entry point(s) (insertion / deletion)
-         let MainContent = document.getElementsByTagName("main")[0];
-         let documentBody = document.body;
-         //step 2 - Create a HTML element in memory
-         let MainParagraph = document.createElement("p");
-         let Article = document.createElement("article");
-         let ArticleParagraph = `<p id="ArticleParagraph" class="mt-3">I am a dedicated, fast learner and look fordward to my future work and learning in IT.</p>`;
-         //step 3 - Configure the new element
-         MainParagraph.setAttribute("id", "MainParagraph");
-         MainParagraph.setAttribute("class", "mt-3");
-         //Main paragraph content.
-         let WelcomeString = "Welcome to my info / about me page! I am currently a full-time student and part time associate at walmart. I enjoy music and video games in my offtime, and also enjoy nature and just generally being outdoors.";
- 
-         document.body.style.backgroundImage = "url('../content/home-background.png')";
         
-         MainParagraph.textContent = WelcomeString;
-         Article.setAttribute("class", "container");
-         //step 4 Perform Insertion / deletion
- 
-         let CustomerSatisfaction = document.createElement("IMG");
-         CustomerSatisfaction.setAttribute("src", "../content/Customer-Service.png");
-         CustomerSatisfaction.setAttribute("width", "300");
-         CustomerSatisfaction.setAttribute("height", "300");
-         CustomerSatisfaction.setAttribute("alt", "Customer Service Guaranteed.");
-         documentBody.appendChild(CustomerSatisfaction);
 
-         //example of insert after / append.
-         MainContent.appendChild(MainParagraph);
-         Article.innerHTML = ArticleParagraph;
-         documentBody.appendChild(Article);
-        
-        // Add human resources to Nav in the proper spot & change products to projects.
-        let productsLink = document.getElementById("products-link");
-        productsLink.innerHTML = `<a class="nav-link" href="projects.html"><i class="fas fa-project-diagram"></i>Projects</a>`;
+        $("#AboutUsButton").on("click", () => 
+        {
+            location.href = "about.html";
+        });
 
-        let humanResourcesLink = document.createElement("nav");
-        humanResourcesLink.innerHTML = `<a class="nav-link" href="human-resources.html"><i class="fab fa-hire-a-helper"></i>HR</a>`;
-        $("#about-button").after(humanResourcesLink);
+        $("main").append(`<p id="MainParagraph" class="mt-3">This is the Main Paragraph</p>`);
 
-        let currenttime = new Date();
-        //create bottom nav
-        let bottomNav = document.createElement("nav");
-        bottomNav.innerHTML = `<nav class="navbar fixed-bottom navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" id="bottomnav" href="#">Fixed bottom</a>
-        </nav`;
-       documentBody.append(bottomNav);
-       document.getElementById(`bottomnav`).innerHTML = currenttime + `Copyright Samuel Hasham 2022<span>&#169;</span>`;
-    
-    
+        $("body").append(`
+        <article class="container">
+            <p id="ArticleParagraph" class="mt-3">This is the Article Paragraph</p>
+            </article>`);
     }
-    /**
-     * Displays the about page as well as a link to my resume.
-     * and inserts two bits of text through <P> tags. There are also changes to the top header including a new link and a
-     * edit to the products.html page. In addition there is also a bottom nav bar added.
-     */
+
     function DisplayAboutPage()
     {
-        console.log("About Page");
-           
-          // Step 1 - get a reference to an entry point(s) (insertion / deletion)
-          let MainContent = document.getElementsByTagName("main")[0];
-          let documentBody = document.body;
-          //step 2 - Create a HTML element in memory
-          let AboutParagraph = document.createElement("p");
-          let Article = document.createElement("article");
-          let ArticleParagraph = `<p id="ArticleParagraph" class="mt-3">When I am given a task or have to fulfill a service I always strive to create something that the client will enjoy, without going overboard & causing unnecessary costs. Clients are guaranteed a system built exactly to their needs and specifications.</p>`;
-          //step 3 - Configure the new element
-          AboutParagraph.setAttribute("id", "AboutParagraph");
-          AboutParagraph.setAttribute("class", "mt-3");
-          //Main paragraph content.
-          let WelcomeString = "Welcome to The about me page!. I offer basic website creation & am educated in C#, C++, basic python, as well as HTML and php. On the side I also offer system designing & creating services for desktops.";
-  
-          document.body.style.backgroundImage = "url('../content/home-background.png')";
-         
-          AboutParagraph.textContent = WelcomeString;
-          Article.setAttribute("class", "container");
-          //Creating a link
-          
-          let ResumeLink = document.createElement('a');
-          let linkText = document.createTextNode("My Resume");
-          ResumeLink.appendChild(linkText);
-          ResumeLink.title = "My Resume";
-          ResumeLink.href = "https://dconline-my.sharepoint.com/:w:/g/personal/samuel_hasham_dcmail_ca/EYLlYGOPdGJIq6VmRjkNMjQBRXF5HDFVBjnPzLd4eY7TgQ?e=PFEWau";
-          ResumeLink.setAttribute("class", "mt-3");
-          //Appending my resume.
-          MainContent.appendChild(ResumeLink);
-          
+        console.log("About Us Page");
+    }
+
+    function DisplayProjectsPage()
+    {
+        console.log("Our Projects Page");
+    }
+
+    function DisplayServicesPage()
+    {
+        console.log("Our Services Page");
+    }
+
+    /**
+     * Adds a Contact Object to localStorage
+     *
+     * @param {string} fullName
+     * @param {string} contactNumber
+     * @param {string} emailAddress
+     */
+    function AddContact(fullName, contactNumber, emailAddress)
+    {
+        let contact = new core.Contact(fullName, contactNumber, emailAddress);
+        if(contact.serialize())
+        {
+            let key = contact.FullName.substring(0, 1) + Date.now();
+
+            localStorage.setItem(key, contact.serialize());
+        }
+    }
+
+    /**
+     * This method validates an input text field in the form and displays
+     * an error in the message area
+     *
+     * @param {string} input_field_ID
+     * @param {RegExp} regular_expression
+     * @param {string} error_message
+     */
+    function ValidateField(input_field_ID, regular_expression, error_message)
+    {
+        let messageArea = $("#ErrorMessage").hide();
         
- 
-          //example of insert after / append.
-          MainContent.appendChild(AboutParagraph);
-          Article.innerHTML = ArticleParagraph;
-          documentBody.appendChild(Article);
+        $("#" + input_field_ID).on("blur", function()
+        {
+            let inputFieldText = $(this).val();
 
+            if(!regular_expression.test(inputFieldText))
+            {
+                $(this).trigger("focus").trigger("select"); 
+                messageArea.addClass("alert alert-danger").text(error_message).show(); 
+            }
+            else
+            {
+                messageArea.removeAttr("class").hide();
+            }
+        });
+    }
 
-           // Add human resources to Nav in the proper spot & change products to projects.
-        let productsLink = document.getElementById("products-link");
-        productsLink.innerHTML = `<a class="nav-link" href="projects.html"><i class="fas fa-project-diagram"></i>Projects</a>`;
-
-        let humanResourcesLink = document.createElement("nav");
-        humanResourcesLink.innerHTML = `<a class="nav-link" href="human-resources.html"><i class="fab fa-hire-a-helper"></i>HR</a>`;
-        $("#about-button").after(humanResourcesLink);
-
-          
-        let currenttime = new Date();
-        //create bottom nav
-        let bottomNav = document.createElement("nav");
-        bottomNav.innerHTML = `<nav class="navbar fixed-bottom navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" id="bottomnav" href="#">Fixed bottom</a>
-        </nav`;
-       documentBody.append(bottomNav);
-       document.getElementById(`bottomnav`).innerHTML = currenttime + `Copyright Samuel Hasham 2022<span>&#169;</span>`;
-    
+    function ContactFormValidation()
+    {
+        ValidateField("fullName", /^([A-Z][a-z]{1,3}\.?\s)?([A-Z][a-z]{1,})+([\s,-]([A-Z][a-z]{1,}))*$/,"Please enter a valid Full Name.");
+        ValidateField("contactNumber", /^(\+\d{1,3}[\s-.])?\(?\d{3}\)?[\s-.]?\d{3}[\s-.]?\d{4}$/, "Please enter a valid Contact Number.");
+        ValidateField("emailAddress", /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,10}$/, "Please enter a valid Email Address.");
     }
     /**
-     * Displays the Contact page as well as adds the event listener to print the field outputs to console and redirect after 3 seconds.
-     * A form for contact saving. There are also changes to the top header including a new link and a
-     * edit to the products.html page. In addition there is also a bottom nav bar added.
+     *
+     *For comparing two strings to see if they are equal.
+     I just use ==, There were interesting ways i saw online of doing it but I didn't know if it was ok to use.
+     * @param {*} password1 first password field to compare
+     * @param {*} password2 second password field to compare
      */
+    function testEqualPasswords(password1,password2)
+    {
+
+        let messageArea = $("#ErrorMessage").hide();
+      
+        $("#confirmPassword").on("blur", function()
+        {
+           
+            // I was able to get this somewhat workin using normalize() although i
+            //got errors in my console when using it so i refrained. There is a bug with
+            //this implementation, but i was unsure how else to verify.
+            if(password1 == password2)
+            {
+               //all is good to hide error
+                messageArea.removeAttr("class").hide();
+            }
+            else
+            {
+               //if doesnt match show error.
+                
+                messageArea.addClass("alert alert-danger").text("Please Match your password.").show(); 
+            }
+        });
+
+
+        
+      
+    }
+    /**
+     * A function to check each field on the registration form and verify that they meet the constraints for a user.
+     * Very similar to the contactformvalidation.
+     */
+    function RegisterFormValidation()
+    {
+        ValidateField("FirstName", /^([A-Z][a-z]{1,})$/,"Please enter a valid First Name with a leading Capital letter and atleast 2 characters.");
+        ValidateField("lastName", /^([A-Z][a-z]{1,})$/,"Please enter a valid Last Name with a leading Capital letter and atleast 2 characters.");
+        ValidateField("password", /^([A-Za-z0-9._-\S]{6,})$/ , "Please enter a Password that is 6 characters long.");
+        
+        ValidateField("confirmPassword", /^([A-Za-z0-9._-\S]{6,})$/, "Please Match your password.");
+        ValidateField("emailAddress", /^([a-zA-Z0-9._-]{8,})+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,10}$/, "Please enter a valid Email Address, it must be 8 characters as a minimum.");
+    }
+    
+    
     function DisplayContactPage()
     {
-        console.log("Contact Page");
+        console.log("Contact Us Page");
+
+        ContactFormValidation();
+        
         let sendButton = document.getElementById("sendButton");
         let subscribeCheckbox = document.getElementById("subscribeCheckbox");
-        let documentBody = document.body;    
-        
+
         sendButton.addEventListener("click", function()
         {
-                event.preventDefault();
-                //output to console
-                console.log($("#fullName").val());
-                console.log($("#contactNumber").val());
-                console.log($("#emailAddress").val());
-                console.log($("#message").val());
-                
-                //delay the redirect
-                window.setTimeout(function() {
-                    window.location.href = "index.html";
-        
-                }, 3000);
-                
+            if(subscribeCheckbox.checked)
+            { 
+                AddContact(fullName.value, contactNumber.value, emailAddress.value);
             }
-            
-           
-        );
-        let currenttime = new Date();
-        let humanResourcesLink = document.createElement("nav");
-        humanResourcesLink.innerHTML = `<a class="nav-link" href="human-resources.html"><i class="fab fa-hire-a-helper"></i>HR</a>`;
-        $("#about-button").after(humanResourcesLink);
-        //create bottom nav
-        let bottomNav = document.createElement("nav");
-        bottomNav.innerHTML = `<nav class="navbar fixed-bottom navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" id="bottomnav" href="#">Fixed bottom</a>
-        </nav`;
+        });
+    }
+
+    function DisplayContactListPage()
+    {
+        console.log("Contact-List Page");
+
+        if(localStorage.length > 0)
+        {
+            let contactList = document.getElementById("contactList");
+
+            let data = ""; // data container -> add deserialized data from the localStorage
+
+            let keys = Object.keys(localStorage); // returns a string array of keys
+
+            let index = 1; // counts how many keys
+
+            // for every key in the keys array (collection), loop
+            for (const key of keys) 
+            {
+                let contactData = localStorage.getItem(key); // get localStorage data value related to the key
+
+                let contact = new core.Contact(); // create a new empty contact object
+                contact.deserialize(contactData);
+
+                // inject a repeatable row into the contactList
+                data += `<tr>
+                <th scope="row" class="text-center">${index}</th>
+                <td>${contact.FullName}</td>
+                <td>${contact.ContactNumber}</td>
+                <td>${contact.EmailAddress}</td>
+                <td class="text-center"><button value="${key}" class="btn btn-primary btn-sm edit"><i class="fas fa-edit fa-sm"></i> Edit</button></td>
+                <td class="text-center"><button value="${key}" class="btn btn-danger btn-sm delete"><i class="fas fa-trash-alt fa-sm"></i> Delete</button></td>
+                </tr>
+                `;
+
+                index++;
+            }
+
+            contactList.innerHTML = data;
+
+            $("#addButton").on("click",() =>
+            {
+                location.href = "edit.html#add";
+            });
+
+            $("button.delete").on("click", function()
+            {
+                if(confirm("Are you sure?"))
+                {
+                    localStorage.removeItem($(this).val());
+                }
+
+                // refresh after deleting
+                location.href = "contact-list.html";
+            });
+
+            $("button.edit").on("click", function()
+            {
+                location.href = "edit.html#" + $(this).val();
+            });
+        }
+    }
+
+    function DisplayEditPage()
+    {
+        console.log("Edit Page");
+
+        ContactFormValidation();
+
+        let page = location.hash.substring(1);
+
+        switch(page)
+        {
+            case "add":
+                {
+                    $("main>h1").text("Add Contact");
+
+                    $("#editButton").html(`<i class="fas fa-plus-circle fa-lg"></i> Add`);
+                
+                    $("#editButton").on("click", (event)=>
+                    {
+                        event.preventDefault();
+                        // Add Contact
+                        AddContact(fullName.value, contactNumber.value, emailAddress.value);
+                        // refresh the contact-list page
+                        location.href = "contact-list.html";
+                    });
+
+                    $("#cancelButton").on("click", () =>
+                    {
+                        location.href = "contact-list.html";
+                    });
+                }
+                break;
+            default:
+                {
+                    // get the contact  info from localStorage
+                    let contact = new core.Contact();
+                    contact.deserialize(localStorage.getItem(page));
+
+                    // display the contact info in the edit form
+                    $("#fullName").val(contact.FullName);
+                    $("#contactNumber").val(contact.ContactNumber);
+                    $("#emailAddress").val(contact.EmailAddress);
+
+                    // when editButton is pressed - update the contact
+                    $("#editButton").on("click", (event)=>
+                    {
+                        event.preventDefault();
+
+                        // get any changes from the form
+                        contact.FullName = $("#fullName").val();
+                        contact.ContactNumber = $("#contactNumber").val();
+                        contact.EmailAddress = $("#emailAddress").val();
+
+                        // replace the item in localStorage
+                        localStorage.setItem(page, contact.serialize());
+
+                        // return to the contact-list
+                        location.href = "contact-list.html";
+                    });
+
+                    $("#cancelButton").on("click", () =>
+                    {
+                        location.href = "contact-list.html";
+                    });
+                }
+                break;
+        }
+    }
+
+    function DisplayLoginPage()
+    {
+        console.log("Login Page");
+        let messageArea = $("#messageArea");
+        messageArea.hide();
+
+        $("#loginButton").on("click", function()
+        {
+
         
-       documentBody.append(bottomNav);
-       document.getElementById(`bottomnav`).innerHTML = currenttime + `Copyright Samuel Hasham 2022<span>&#169;</span>`;
-    
-        
+
+
+            let success = false;
+
+            // create an empty user object
+            let newUser = new core.User();
+
+            // use jQuery shortcut to lod the users.json file
+            $.get("./Data/users.json", function(data)
+            {
+                // for every user in the users.json file, loop
+                for (const user of data.users) 
+                {
+                    // check if the username and password entered matches the user data
+                    if(username.value == user.Username && password.value == user.Password)
+                    {
+                        console.log("conditional passed!");
+                        // get the user data from the file and assign it to our empty user object
+                        newUser.fromJSON(user);
+                        success = true;
+                        break;
+                    }
+                }
+
+                 // if username and password matches..success! -> perform the login sequence
+                if(success)
+                {
+                    // add user to session storage
+                    sessionStorage.setItem("user", newUser.serialize());
+
+                    // hide any error message
+                    messageArea.removeAttr("class").hide();
+
+                    // redirect the user to the secure area of the site - contact-list.html
+                    location.href = "contact-list.html";
+                    // Add username to Nav in the proper spot.
+                    var usernameDisplay = $("#username").text;
+                    let contactLink = document.getElementById("contact");
+                    let usernameNavDisplay = $("<p></p>");
+                    usernameNavDisplay.innerHTML = `<p> `  + usernameDisplay + ` </p>`;
+                    contactLink.after(usernameNavDisplay);  
+                }
+                else
+                {
+                    // display an error message
+                    $("#username").trigger("focus").trigger("select");
+                    messageArea.addClass("alert alert-danger").text("Error: Invalid Login Credentials").show();
+                }
+            });
+        });
+
+        $("#cancelButton").on("click", function()
+        {
+            // clear the login form
+            document.forms[0].reset();
+
+            // return to the home page
+            location.href = "index.html";
+        });
+
         
     }
-  
     /**
-     *switch case for which display is shown based on the pages title.
-     *
+     * I added a extra element in the navbar to display the username but cannot get the text to actually output to the form
+     * Unsure of how to fix this as ive had this similar problem earlier.
+     * but if logged in the login becomes logout and there is a designated spot for the users username added after the
+     * contact link.
      */
+    function CheckLogin()
+    {
+        // if user is logged in, then...
+        if(sessionStorage.getItem("user"))
+        {
+                
+            var usernameDisplay = $("#username").html;
+            let contactLink = document.getElementById("contact");
+            let usernameNavDisplay = $("<p></p>");
+            usernameNavDisplay.innerHTML = `<p> `  + usernameDisplay.text + ` </p>`;
+            contactLink.after(usernameNavDisplay);  
+            // swap out the login link for logout
+            $("#login").html(
+                `<a id="logout" class="nav-link" href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>`
+            );
+
+            $("#logout").on("click", function()
+            {
+                // perform logout
+                sessionStorage.clear();
+                
+                // redirect back to login page
+                location.href = "login.html";
+            });
+        }
+    }
+
+    function DisplayRegisterPage()
+    {
+        console.log("Register Page");
+        $("#mainContent").prepend(`<div id="ErrorMessage" class="alert alert-success"></div>`);
+        RegisterFormValidation();
+        testEqualPasswords();
+
+        let submitButton = document.getElementById("submitButton");
+        //sending event as a parameter gets rid of the depricated error i was receiving
+        // although it still doesnt work as the page does submit. Unsure how to fix this.
+        submitButton.addEventListener("click", function()
+        {
+            event.preventDefault();         
+            let firstname = $("#FirstName").text();
+            let lastname = $("#lastName").text();
+            let username = firstname + lastname;
+            let email = $("#emailAddress").text();
+            let password = $("#password").text();
+            let enteredUser = new User(firstname.value,lastname.value,username.value,email.value,password.value);
+            console.log(enteredUser.toString());
+
+        });
+
+
+        //idk why this wont work :l
+        // let errorWarning = document.createElement("<div>")
+        //errorWarning.innerHTML(`<div id="ErrorMessage" class="alert alert-success">sample</div>`);
+        //$("mainContent").after(errorWarning); 
+    }
+
+    // named function
     function Start()
     {
-        console.log("App Started!");
+        console.log("App Started!!");
 
-        switch(document.title)
+        AjaxRequest("GET", "header.html", LoadHeader);
+
+        switch (document.title) 
         {
-            case "Home":
-                DisplayHomePage();
-                break;
-            case "Projects":
-                DisplayProjectsPage();
-                break;
-            case "Services":
-                DisplayServicesPage();
-                break;
-            case "About us":
-                DisplayAboutPage();
-                break;
-            case "Contact us":
-                DisplayContactPage();
-                break;
-            
+          case "Home":
+            DisplayHome();
+            break;
+          case "About Us":
+            DisplayAboutPage();
+            break;
+          case "Our Projects":
+            DisplayProjectsPage();
+            break;
+          case "Our Services":
+            DisplayServicesPage();
+            break;
+          case "Contact-List":
+            DisplayContactListPage();
+            break;
+          case "Contact Us":
+            DisplayContactPage();
+            break;
+          case "Edit":
+            DisplayEditPage();
+            break;
+            case "Login":
+            DisplayLoginPage();
+            break;
+            case "Register":
+            DisplayRegisterPage();
+            break;
         }
 
-       
-
-
-
-
+        
     }
+    
 
     window.addEventListener("load", Start);
-
-
 
 
 })();
